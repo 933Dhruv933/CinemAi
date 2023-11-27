@@ -102,14 +102,6 @@ import pandas as pd
 import streamlit as st
 import requests
 
-col1, col2 = st.columns([1,3])
-with col1:
-    st_lottie(lottie_animation, width=200, height=150)
-    
-with col2:
-    # st.title('CinemAI')
-    st.markdown('<h1 style="font-size: 84px;">CinemAI</h1>', unsafe_allow_html=True)
-
 def fetch_poster(movie_id):
    response = requests.get('https://api.themoviedb.org/3/movie/{}?api_key=60039e34c25a25b8ca44082047aa767b&language=en-US'.format(movie_id))
    data = response.json()

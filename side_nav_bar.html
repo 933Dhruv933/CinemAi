@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popular Movies</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        #movies-container {
+            display: flex;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        .movie-card {
+            width: 300px;
+            margin: 10px;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .movie-details {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .movie-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .movie-release {
+            font-size: 0.8rem;
+            color: #555;
+        }
+
+        .movie-overview {
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .movie-card:hover .movie-overview {
+            display: block;
+        }
+
+        #prev-btn,
+        #next-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            cursor: pointer;
+            color: #333;
+        }
+
+        #prev-btn {
+            left: 10px;
+        }
+
+        #next-btn {
+            right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Popular Movies</h1>
+    </header>
+    <div id="movies-container"></div>
+    <div id="prev-btn" onclick="prevMovie()">&#10094;</div>
+    <div id="next-btn" onclick="nextMovie()">&#10095;</div>
+
+    <script>
+        const url = "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1";
+        const apiKey = "YOUR_TMDB_API_KEY"; // Replace with your TMDb API key
+
+        let currentIndex = 0;
+
+        async function fetchMovies() {
+            try {
+                const response = await fetch(${url}&api_key=${apiKey});
+                const data = await response.json();
+                displayMovies(data.results);
+            } catch (error) {
+                console.error("Error fetching movies:", error);
+            }
+        }
+
+        function displayMovies(movies) {
+            const container = document.getElementById("movies-container");
+
+            movies.forEach((movie, index) => {
+                const card = document.createElement("div");
+                card.classList.add("movie-card");
+                card.style.transform = translateX(${index * 320}px);
+
+                const poster = document.createElement("img");
+                poster.src = https://image.tmdb.org/t/p/w500${movie.poster_path};
+                poster.alt = movie.title;
+
+                const details = document.createElement("div");
+                details.classList.add("movie-details");
+
+                const title = document.createElement("div");
+                title.classList.add("movie-title");
+                title.textContent = movie.title;
+
+                const release = document.createElement("div");
+                release.classList.add("movie-release");
+                release.textContent = Release Date: ${movie.release_date};
+
+                const overview = document.createElement("div");
+                overview.classList.add("movie-overview");
+                overview.textContent = movie.overview;
+
+                details.appendChild(title);
+                details.appendChild(release);
+                details.appendChild(overview);
+
+                card.appendChild(poster);
+                card.appendChild(details);
+
+                container.appendChild(card);
+            });
+        }
+
+        function nextMovie() {
+            const movies = document.querySelectorAll(".movie-card");
+            const totalMovies = movies.length;
+
+            if (currentIndex < totalMovies - 1) {
+                currentIndex++;
+                updateCarousel();
+            }
+        }
+
+        function prevMovie() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        }
+
+        function updateCarousel() {
+            const movies = document.querySelectorAll(".movie-card");
+            movies.forEach((movie, index) => {
+                movie.style.transform = translateX(${(index - currentIndex) * 320}px);
+            });
+        }
+
+        // Call the fetchMovies function when the page loads
+        fetchMovies();
+    </script>
+</body>
+
+</html>
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Functional Sidebar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        #sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+            color: white;
+        }
+
+        #sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        #sidebar a:hover {
+            color: #f1f1f1;
+        }
+
+        #sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        #main {
+            transition: margin-left 0.5s;
+            padding: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <a href="#">Link 1</a>
+        <a href="#">Link 2</a>
+        <a href="#">Link 3</a>
+        Add more links as needed -->
+    <!-- </div>
+
+    <div id="main">
+        <button class="openbtn" onclick="openNav()">☰ Open Sidebar</button>
+        <h2>Main Content</h2>
+        <p>This is some main content.</p>
+    </div>
+
+    <script>
+        function openNav() {
+            document.getElementById("sidebar").style.width = "250px";
+            document.getElementById("main").style.marginLeft = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("sidebar").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+    </script>
+</body>
+</html>  -->

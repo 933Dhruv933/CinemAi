@@ -102,16 +102,6 @@ import pandas as pd
 import streamlit as st
 import requests
 
-from streamlit_lottie import st_lottie
-
-def load_lottie_url(url):
-    r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
-
-lottie_animation = load_lottie_url("https://lottie.host/63eb9dac-2602-4b4a-93cf-8ef67108eee6/HAW2psDBQ2.json")
-
 col1, col2 = st.columns([1,3])
 with col1:
     st_lottie(lottie_animation, width=200, height=150)
